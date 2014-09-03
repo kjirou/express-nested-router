@@ -1,0 +1,20 @@
+{
+  "name": "mongodb_tutorial",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kjirou/express_crud_patterns"
+  },
+  "private": true,
+  "description": "",
+  "version": "0.0.1",
+  "author": "kjirou",
+  "dependencies": {
+    "express": "~3.4.7",
+    "app-root-path": "~0.1"
+  },
+  "devDependencies": {
+  },
+  "scripts": {
+    "env": "env"
+  }
+}
