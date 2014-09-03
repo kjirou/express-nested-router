@@ -1,20 +1,25 @@
 {
-  "name": "mongodb_tutorial",
+  "name": "express-nested-router",
   "repository": {
     "type": "git",
-    "url": "https://github.com/kjirou/express_crud_patterns"
+    "url": "https://github.com/kjirou/express-nested-router"
   },
   "private": true,
   "description": "",
   "version": "0.0.1",
   "author": "kjirou",
   "dependencies": {
-    "express": "~3.4.7",
-    "app-root-path": "~0.1"
   },
   "devDependencies": {
+    "express": "~3.16.8",
+    "app-root-path": "~0.1",
+    "mocha": "*",
+    "expect.js": "*",
+    "testem": "~0.6.17",
+    "jshint": "*"
   },
   "scripts": {
-    "env": "env"
+    "test": "mocha test/tests.js",
+    "jshint": "jshint index.js lib/express-nested-router.js test/tests.js"
   }
 }
