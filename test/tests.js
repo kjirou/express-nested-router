@@ -118,16 +118,31 @@ describe('express-nested-router', function(){
         ]);
       });
 
-      it('トップ名前空間の下に名前空間とコントローラがある', function(){
-        var fooNamespace = new router.Namespace();
-        var barController = new router.Namespace();
+      it('トップ名前空間の下に子名前空間とコントローラがある', function(){
+        var fooIndexController = function(){},
+          fooCreateController = function(){};
+        var fooNamespace = new router.Namespace({
+          index: fooIndexController,
+          create: fooCreateController
+        });
+
+        var indexController = function(){},
+          barController = function(){};
         var topNamespace = new router.Namespace({
+          index: indexController,
           foo: fooNamespace,
           bar: barController
         });
+
         var routes = topNamespace._resolveRoutes().sort(function(a, b){
           return a[0] > b[0];
         });
+        assert.deepEqual(routes, [
+          ['', indexController],
+          ['/bar', barController],
+          ['/foo', fooIndexController],
+          ['/foo/create', fooCreateController]
+        ]);
       });
     });
   });
