@@ -42,6 +42,27 @@ describe('express-nested-router', function(){
         bar: {}
       });
     });
+
+    it('getRoutes', function(){
+      var namespace;
+      namespace = new router.Namespace();
+      expect(namespace.getRoutes()).to.eql({});
+      namespace = new router.Namespace({a:function(){}, b:function(){}});
+      expect(Object.keys(namespace.getRoutes()).sort()).to.eql(['a', 'b']);
+    });
+
+    it('addRoute', function(){
+      var namespace = new router.Namespace();
+      namespace.addRoute('', function(){});
+      namespace.addRoute('foo', function(){});
+      namespace.addRoute('foo/bar', function(){});
+      expect(Object.keys(namespace.getRoutes()).sort()).to.eql(['', 'foo', 'foo/bar']);
+
+      // Allow overwriting
+      var controller = function(){};
+      namespace.addRoute('foo', controller);
+      expect(namespace.getRoutes().foo).to.be(controller);
+    });
   });
 
   describe('APIs', function(){
