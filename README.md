@@ -35,7 +35,7 @@ var app = express();
 var fooNamespace = router.namespace({
   index: function(req, res, next){},
   create: function(req, res, next){},
-  show: function(req, res, next){},
+  show: function(req, res, next){}
 });
 
 var namespace = router.namespace({
