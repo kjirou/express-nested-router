@@ -6,7 +6,7 @@ express-nested-router
 
 ```
 var express = require('express');
-var rounter = require('express-nested-router');
+var router = require('express-nested-router');
 
 var app = express();
 
@@ -28,7 +28,7 @@ namespace.resolve(app);
 
 ```
 var express = require('express');
-var rounter = require('express-nested-router');
+var router = require('express-nested-router');
 
 var app = express();
 
