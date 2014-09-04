@@ -1,25 +1,26 @@
-var expect = require('expect.js');
+var assert = require('power-assert');
 var router = require('../index');
 
 
 describe('express-nested-router', function(){
+
   it('Module definition', function(){
-    expect(router).to.be.a('object');
+    assert(typeof router === 'object');
   });
 
   describe('Static Methods', function(){
     it('_joinPath', function(){
-      expect(router._joinPath('', '/foo')).to.be('/foo');
-      expect(router._joinPath('', 'foo')).to.be('/foo');
-      expect(router._joinPath('', 'foo/bar')).to.be('/foo/bar');
-      expect(router._joinPath('', 'index')).to.be('');
-      expect(router._joinPath('', '/index')).to.be('');
-      expect(router._joinPath('foo', 'index')).to.be('foo');
-      expect(router._joinPath('', 'index/foo')).to.be('/foo');
-      expect(router._joinPath('', '/index/foo')).to.be('/foo');
-      expect(router._joinPath('', 'index/foo/bar')).to.be('/foo/bar');
-      expect(router._joinPath('index', 'foo')).to.be('index/foo');
-      expect(router._joinPath('index', 'index')).to.be('index');
+      assert.strictEqual(router._joinPath('', '/foo'), '/foo');
+      assert.strictEqual(router._joinPath('', 'foo'), '/foo');
+      assert.strictEqual(router._joinPath('', 'foo/bar'), '/foo/bar');
+      assert.strictEqual(router._joinPath('', 'index'), '');
+      assert.strictEqual(router._joinPath('', '/index'), '');
+      assert.strictEqual(router._joinPath('foo', 'index'), 'foo');
+      assert.strictEqual(router._joinPath('', 'index/foo'), '/foo');
+      assert.strictEqual(router._joinPath('', '/index/foo'), '/foo');
+      assert.strictEqual(router._joinPath('', 'index/foo/bar'), '/foo/bar');
+      assert.strictEqual(router._joinPath('index', 'foo'), 'index/foo');
+      assert.strictEqual(router._joinPath('index', 'index'), 'index');
     });
   });
 
@@ -29,15 +30,15 @@ describe('express-nested-router', function(){
 
       // No args
       namespace = new router.Namespace();
-      expect(namespace).to.be.a('object');
-      expect(namespace._routes).to.eql({});
+      assert(typeof namespace === 'object');
+      assert.deepEqual(namespace._routes, {});
 
       // Args exist
       namespace = new router.Namespace({
         foo: {},
         bar: {}
       });
-      expect(namespace._routes).to.eql({
+      assert.deepEqual(namespace._routes, {
         foo: {},
         bar: {}
       });
@@ -46,33 +47,48 @@ describe('express-nested-router', function(){
     it('getRoutes', function(){
       var namespace;
       namespace = new router.Namespace();
-      expect(namespace.getRoutes()).to.eql({});
-      namespace = new router.Namespace({a:function(){}, b:function(){}});
-      expect(Object.keys(namespace.getRoutes()).sort()).to.eql(['a', 'b']);
+      assert.deepEqual(namespace.getRoutes(), {});
+      var fooController = function(){},
+        barController = function(){};
+      namespace = new router.Namespace({
+        foo: fooController,
+        bar: barController
+      });
+      assert.deepEqual(namespace.getRoutes(), {
+        foo: fooController,
+        bar: barController
+      })
     });
 
     it('addRoute', function(){
-      var namespace = new router.Namespace();
-      namespace.addRoute('', function(){});
-      namespace.addRoute('foo', function(){});
-      namespace.addRoute('foo/bar', function(){});
-      expect(Object.keys(namespace.getRoutes()).sort()).to.eql(['', 'foo', 'foo/bar']);
+      var namespace = new router.Namespace(),
+        indexController = function(){},
+        fooController = function(){},
+        fooBarController = function(){};
+      namespace.addRoute('', indexController);
+      namespace.addRoute('foo', fooController);
+      namespace.addRoute('foo/bar', fooBarController);
+      assert.deepEqual(namespace.getRoutes(), {
+        '': indexController,
+        foo: fooController,
+        'foo/bar': fooBarController
+      });
 
       // Allow overwriting
       var controller = function(){};
       namespace.addRoute('foo', controller);
-      expect(namespace.getRoutes().foo).to.be(controller);
+      assert.strictEqual(namespace.getRoutes().foo, controller);
     });
   });
 
   describe('APIs', function(){
     it('Namespace', function(){
-      expect(router.Namespace).to.be.a('function');
+      assert(typeof router.Namespace === 'function');
     });
 
     it('namespace', function(){
       var namespace = router.namespace();
-      expect(namespace).to.be.a(router.Namespace);
+      assert(namespace instanceof router.Namespace);
     });
   });
 });

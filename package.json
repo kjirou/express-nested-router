@@ -1,10 +1,11 @@
 {
   "name": "express-nested-router",
+  "private": true,
   "repository": {
     "type": "git",
     "url": "https://github.com/kjirou/express-nested-router"
   },
-  "private": true,
+  "main": "index.js",
   "description": "",
   "version": "0.0.1",
   "author": "kjirou",
@@ -14,12 +15,17 @@
     "express": "~3.16.8",
     "app-root-path": "~0.1",
     "mocha": "*",
-    "expect.js": "*",
+    "power-assert": "^0.8.0",
+    "espower-loader": "^0.8.0",
+    "intelli-espower-loader": "^0.3.0",
     "testem": "~0.6.17",
     "jshint": "*"
   },
+  "directories": {
+    "test": "test/"
+  },
   "scripts": {
-    "test": "mocha test/tests.js",
+    "test": "mocha --require intelli-espower-loader test/tests.js",
     "jshint": "jshint index.js lib/express-nested-router.js test/tests.js"
   }
 }
