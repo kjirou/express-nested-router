@@ -57,7 +57,7 @@ describe('express-nested-router', function(){
       assert.deepEqual(namespace.getRoutes(), {
         foo: fooController,
         bar: barController
-      })
+      });
     });
 
     it('addRoute', function(){
@@ -78,6 +78,57 @@ describe('express-nested-router', function(){
       var controller = function(){};
       namespace.addRoute('foo', controller);
       assert.strictEqual(namespace.getRoutes().foo, controller);
+    });
+
+    it('removeRoute', function(){
+      var namespace = new router.Namespace();
+      namespace.addRoute('foo', function(){});
+      assert('foo' in namespace.getRoutes());
+      namespace.removeRoute('foo');
+      assert('foo' in namespace.getRoutes() === false);
+      try {
+        namespace.removeRoute('not_defined_key');
+        throw new Error('Error not occured.');
+      } catch (e) {
+      }
+    });
+
+    describe('_resolveRoutes', function(){
+      it('Should create only a top route.', function(){
+        var topController = function(){};
+        var namespace = new router.namespace({index:topController})
+        var routes = namespace._resolveRoutes();
+        assert.deepEqual(routes, [['', topController]]);
+      });
+
+      it('一名前空間にトップと複数のルートがある', function(){
+        var controllers = {
+          index: function(){},
+          foo: function(){},
+          bar: function(){}
+        };
+        var namespace = new router.Namespace(controllers);
+        var routes = namespace._resolveRoutes().sort(function(a, b){
+          return a[0] > b[0];
+        });
+        assert.deepEqual(routes, [
+          ['', controllers.index],
+          ['/bar', controllers.bar],
+          ['/foo', controllers.foo]
+        ]);
+      });
+
+      it('トップ名前空間の下に名前空間とコントローラがある', function(){
+        var fooNamespace = new router.Namespace();
+        var barController = new router.Namespace();
+        var topNamespace = new router.Namespace({
+          foo: fooNamespace,
+          bar: barController
+        });
+        var routes = topNamespace._resolveRoutes().sort(function(a, b){
+          return a[0] > b[0];
+        });
+      });
     });
   });
 
