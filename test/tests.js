@@ -84,7 +84,7 @@ describe('express-nested-router', function(){
     it('extendRoutes', function(){
       var indexController = function(){},
         fooController = function(){},
-        barController = function(){}
+        barController = function(){};
       var namespace = new router.Namespace({
         index: indexController,
         foo: fooController
@@ -132,7 +132,7 @@ describe('express-nested-router', function(){
     describe('_resolveRoutes', function(){
       it('Should create only a top route.', function(){
         var topController = function(){};
-        var namespace = new router.namespace({index:topController})
+        var namespace = new router.namespace({index:topController});
         var routes = namespace._resolveRoutes();
         assert.deepEqual(routes, [['', topController]]);
       });
