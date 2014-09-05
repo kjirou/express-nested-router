@@ -55,3 +55,9 @@ namespace.resolve(app);
 //   '/bar'
 //
 ```
+
+
+## Development
+
+- `node ~0.10.0`
+  - `~0.10.0` is for `power-assert` output, `0.11` cannot output correctly.

@@ -9,6 +9,9 @@
   "description": "",
   "version": "0.0.1",
   "author": "kjirou",
+  "engines": {
+    "node": "<0.12"
+  },
   "dependencies": {
   },
   "devDependencies": {
