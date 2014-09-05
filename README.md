@@ -20,9 +20,9 @@ namespace.resolve(app);
 
 //
 // Routes:
-//   ''
-//   '/foo'
+//   '/'
 //   '/bar'
+//   '/foo'
 //
 ```
 
@@ -48,11 +48,11 @@ namespace.resolve(app);
 
 //
 // Routes:
-//   ''
+//   '/'
+//   '/bar'
 //   '/foo/'
 //   '/foo/create'
 //   '/foo/show'
-//   '/bar'
 //
 ```
 
