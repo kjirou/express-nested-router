@@ -107,10 +107,7 @@ describe('express-nested-router', function(){
           bar: function(){}
         };
         var namespace = new router.Namespace(controllers);
-        var routes = namespace._resolveRoutes().sort(function(a, b){
-          return a[0] > b[0];
-        });
-        assert.deepEqual(routes, [
+        assert.deepEqual(namespace._resolveRoutes(), [
           ['', controllers.index],
           ['/bar', controllers.bar],
           ['/foo', controllers.foo]
@@ -133,10 +130,7 @@ describe('express-nested-router', function(){
           bar: barController
         });
 
-        var routes = topNamespace._resolveRoutes().sort(function(a, b){
-          return a[0] > b[0];
-        });
-        assert.deepEqual(routes, [
+        assert.deepEqual(topNamespace._resolveRoutes(), [
           ['', indexController],
           ['/bar', barController],
           ['/foo', fooIndexController],
