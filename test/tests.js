@@ -86,11 +86,9 @@ describe('express-nested-router', function(){
       assert('foo' in namespace.getRoutes());
       namespace.removeRoute('foo');
       assert('foo' in namespace.getRoutes() === false);
-      try {
+      assert.throws(function(){
         namespace.removeRoute('not_defined_key');
-        throw new Error('Error not occured.');
-      } catch (e) {
-      }
+      }, /Path/i);
     });
 
     describe('_resolveRoutes', function(){
