@@ -92,6 +92,29 @@ describe('express-nested-router', function(){
       }, /Path/i);
     });
 
+    it('copyRoute', function(){
+      var controller = function(){};
+      var namespace = new router.Namespace({
+        index: controller
+      });
+      namespace.copyRoute('index', 'foo');
+      assert.deepEqual(namespace.getRoutes(), {
+        index: controller,
+        foo: controller
+      });
+    });
+
+    it('moveRoute', function(){
+      var controller = function(){};
+      var namespace = new router.Namespace({
+        index: controller
+      });
+      namespace.moveRoute('index', 'foo');
+      assert.deepEqual(namespace.getRoutes(), {
+        foo: controller
+      });
+    });
+
     describe('_resolveRoutes', function(){
       it('Should create only a top route.', function(){
         var topController = function(){};
