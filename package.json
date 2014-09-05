@@ -15,7 +15,7 @@
   "dependencies": {
   },
   "devDependencies": {
-    "express": "~3.16.8",
+    "express": "~3.16",
     "mocha": "*",
     "power-assert": "~0.9.0",
     "espower-loader": "~0.9.0",
@@ -27,6 +27,7 @@
   },
   "scripts": {
     "test": "mocha --require intelli-espower-loader",
+    "ci": "mocha",
     "jshint": "jshint index.js lib/express-nested-router.js test/tests.js"
   }
 }
