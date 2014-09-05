@@ -16,12 +16,10 @@
   },
   "devDependencies": {
     "express": "~3.16.8",
-    "app-root-path": "~0.1",
     "mocha": "*",
     "power-assert": "~0.9.0",
     "espower-loader": "~0.9.0",
     "intelli-espower-loader": "~0.4.0",
-    "testem": "~0.6.17",
     "jshint": "*"
   },
   "directories": {
