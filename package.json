@@ -8,6 +8,11 @@
   "description": "Router combines namespace independent for the express",
   "version": "0.0.1",
   "author": "kjirou",
+  "keywords": [
+    "express",
+    "router",
+    "routing"
+  ],
   "engines": {
     "node": "<0.12"
   },
