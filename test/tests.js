@@ -81,6 +81,20 @@ describe('express-nested-router', function(){
       assert.strictEqual(namespace.getRoutes().foo, controller);
     });
 
+    it('extendRoutes', function(){
+      var indexController = function(){},
+        fooController = function(){},
+        barController = function(){}
+      var namespace = new router.Namespace({
+        index: indexController,
+        foo: fooController
+      });
+      namespace.extendRoutes({
+        foo: fooController,
+        bar: barController
+      });
+    });
+
     it('removeRoute', function(){
       var namespace = new router.Namespace();
       namespace.addRoute('foo', function(){});
