@@ -1,4 +1,5 @@
 var assert = require('power-assert');
+var express = require('express');
 var router = require('../index');
 
 
@@ -141,6 +142,27 @@ describe('express-nested-router', function(){
           ['/foo', fooIndexController],
           ['/foo/create', fooCreateController]
         ]);
+      });
+    });
+
+    describe('resolve', function(){
+      it('express上でroutesを定義できる', function(){
+        var app = express();
+        var indexController = function(){},
+          fooController = function(){};
+        var namespace = new router.Namespace({
+          index: indexController,
+          foo: fooController
+        });
+        namespace.resolve(app);
+
+        var getMethodPaths = app.routes.get.slice()
+          .sort(function(a, b){
+            return a.path > b.path;
+          }).map(function(v){
+            return v.path;
+          });
+        assert.deepEqual(['/', '/foo'], getMethodPaths);
       });
     });
   });
