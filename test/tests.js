@@ -32,14 +32,14 @@ describe('express-nested-router', function(){
       // No args
       namespace = new router.Namespace();
       assert(typeof namespace === 'object');
-      assert.deepEqual(namespace._routes, {});
+      assert.deepEqual(namespace.getRoutes(), {});
 
       // Args exist
       namespace = new router.Namespace({
         foo: {},
         bar: {}
       });
-      assert.deepEqual(namespace._routes, {
+      assert.deepEqual(namespace.getRoutes(), {
         foo: {},
         bar: {}
       });
