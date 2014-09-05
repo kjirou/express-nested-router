@@ -1,6 +1,8 @@
 express-nested-router
 =====================
 
+Router combines namespace independent for the [express](https://github.com/strongloop/express).
+
 
 ## Examples
 
