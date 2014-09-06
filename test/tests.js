@@ -10,6 +10,18 @@ describe('express-nested-router', function(){
   });
 
   describe('Static Methods', function(){
+    it('_extend', function(){
+      assert.deepEqual(router._extend({}, {a:1, b:true}), {a:1, b:true});
+      // Overwrite props
+      assert.deepEqual(router._extend({a:1}, {a:2}), {a:2});
+      // Props are shallow copied, and source is reference copied
+      var source = {};
+      var props = {};
+      var extended = router._extend(source, props);
+      assert(extended !== props);
+      assert(extended === source);
+    });
+
     it('_joinPath', function(){
       assert.strictEqual(router._joinPath('', '/foo'), '/foo');
       assert.strictEqual(router._joinPath('', 'foo'), '/foo');
@@ -93,6 +105,18 @@ describe('express-nested-router', function(){
         foo: fooController,
         bar: barController
       });
+    });
+
+    it('Should receive routes by shallow copying', function(){
+      var controllers = {
+        index: function(){}
+      };
+      var namespace = new router.Namespace(controllers);
+      namespace.addRoute('foo', function(){});
+      var routes = namespace.getRoutes();
+      assert(namespace !== routes);
+      assert('foo' in routes);
+      assert('foo' in controllers === false);
     });
 
     it('removeRoute', function(){
