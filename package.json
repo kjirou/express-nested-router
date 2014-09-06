@@ -6,7 +6,7 @@
   },
   "main": "index.js",
   "description": "Router combines namespace independent for the express",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "author": "kjirou",
   "keywords": [
     "express",
