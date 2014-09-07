@@ -1,7 +1,7 @@
-express-nested-router
+express-nested-router [![Build Status](https://travis-ci.org/kjirou/express-nested-router.svg?branch=master)](https://travis-ci.org/kjirou/express-nested-router)
 =====================
 
-Router combines namespace independent for the [express](https://github.com/strongloop/express).
+Router combines namespace independent for the [express](https://github.com/strongloop/express) 3.x.
 
 
 ## Examples
@@ -62,4 +62,4 @@ namespace.resolve(app);
 ## Development
 
 - `node ~0.10.0`
-  - `~0.10.0` is for `power-assert` output, `0.11` cannot output correctly.
+  - If you use the `0.11`, `power-assert` does not work correctly.
