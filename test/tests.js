@@ -153,6 +153,15 @@ describe('express-nested-router', function(){
       });
     });
 
+    it('Should be created by namespace object', function(){
+      var namespace = new router.Namespace({
+        index: function(){},
+        foo: function(){}
+      });
+      var newNamespace = new router.Namespace(namespace);
+      assert.deepEqual(newNamespace.getRoutes(), namespace.getRoutes());
+    });
+
     describe('_resolveRoutes', function(){
       it('Should create only a top route.', function(){
         var topController = function(){};
