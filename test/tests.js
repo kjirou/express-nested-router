@@ -155,14 +155,18 @@ describe('express-nested-router', function(){
       });
     });
 
-    it('addBeforeFilter/addAfterFilter', function(){
+    it('Middleware functions', function(){
       var namespace = new router.Namespace();
-      var beforeFilter = function(){};
-      var afterFilter = function(){};
-      namespace.addBeforeFilter(beforeFilter);
-      namespace.addAfterFilter(afterFilter);
-      assert.deepEqual(namespace._beforeFilters, [beforeFilter]);
-      assert.deepEqual(namespace._afterFilters, [afterFilter]);
+      var beforeMiddleware = function(){};
+      var beforeMiddleware2 = function(){};
+      var afterMiddleware = function(){};
+      var afterMiddleware2 = function(){};
+      namespace.pushBeforeMiddleware(beforeMiddleware);
+      namespace.pushAfterMiddleware(afterMiddleware);
+      namespace.unshiftBeforeMiddleware(beforeMiddleware2);
+      namespace.unshiftAfterMiddleware(afterMiddleware2);
+      assert.deepEqual(namespace._beforeMiddlewares, [beforeMiddleware2, beforeMiddleware]);
+      assert.deepEqual(namespace._afterMiddlewares, [afterMiddleware2, afterMiddleware]);
     });
 
     it('Should be created by namespace object', function(){
@@ -180,7 +184,7 @@ describe('express-nested-router', function(){
         var namespace = new router.namespace({index:topController});
         var routes = namespace._resolveRoutes();
         assert.deepEqual(routes, [[
-          '', topController, namespace._beforeFilters, namespace._afterFilters
+          '', topController, namespace._beforeMiddlewares, namespace._afterMiddlewares
         ]]);
       });
 
@@ -192,9 +196,9 @@ describe('express-nested-router', function(){
         };
         var namespace = new router.Namespace(controllers);
         assert.deepEqual(namespace._resolveRoutes(), [
-          ['', controllers.index, namespace._beforeFilters, namespace._afterFilters],
-          ['/bar', controllers.bar, namespace._beforeFilters, namespace._afterFilters],
-          ['/foo', controllers.foo, namespace._beforeFilters, namespace._afterFilters]
+          ['', controllers.index, namespace._beforeMiddlewares, namespace._afterMiddlewares],
+          ['/bar', controllers.bar, namespace._beforeMiddlewares, namespace._afterMiddlewares],
+          ['/foo', controllers.foo, namespace._beforeMiddlewares, namespace._afterMiddlewares]
         ]);
       });
 
@@ -215,11 +219,11 @@ describe('express-nested-router', function(){
         });
 
         assert.deepEqual(topNamespace._resolveRoutes(), [
-          ['', indexController, topNamespace._beforeFilters, topNamespace._afterFilters],
-          ['/bar', barController, topNamespace._beforeFilters, topNamespace._afterFilters],
+          ['', indexController, topNamespace._beforeMiddlewares, topNamespace._afterMiddlewares],
+          ['/bar', barController, topNamespace._beforeMiddlewares, topNamespace._afterMiddlewares],
           ['/foo', fooNamespace],
-          ['/foo', fooIndexController, fooNamespace._beforeFilters, fooNamespace._afterFilters],
-          ['/foo/create', fooCreateController, fooNamespace._beforeFilters, fooNamespace._afterFilters]
+          ['/foo', fooIndexController, fooNamespace._beforeMiddlewares, fooNamespace._afterMiddlewares],
+          ['/foo/create', fooCreateController, fooNamespace._beforeMiddlewares, fooNamespace._afterMiddlewares]
         ]);
       });
     });
@@ -244,7 +248,7 @@ describe('express-nested-router', function(){
         assert.deepEqual(['/', '/foo'], getMethodPaths);
       });
 
-      it('設定したfilter群が正しく実行されている', function(done){
+      it('設定したmiddleware群が正しく実行されている', function(done){
         var app = express();
         var namespace = new router.Namespace({
           index: function(req, res, next){
@@ -252,19 +256,19 @@ describe('express-nested-router', function(){
             next();
           }
         });
-        namespace.addBeforeFilter(function(req, res, next){
+        namespace.pushBeforeMiddleware(function(req, res, next){
           res.__results__ = [1];
           next();
         });
-        namespace.addBeforeFilter(function(req, res, next){
+        namespace.pushBeforeMiddleware(function(req, res, next){
           res.__results__.push(2);
           next();
         });
-        namespace.addAfterFilter(function(req, res, next){
+        namespace.pushAfterMiddleware(function(req, res, next){
           res.__results__.push(4);
           next();
         });
-        namespace.addAfterFilter(function(req, res){
+        namespace.pushAfterMiddleware(function(req, res){
           res.__results__.push(5);
           res.send(res.__results__.join(''));
         });
