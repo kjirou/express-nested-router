@@ -217,6 +217,7 @@ describe('express-nested-router', function(){
         assert.deepEqual(topNamespace._resolveRoutes(), [
           ['', indexController, topNamespace._beforeFilters, topNamespace._afterFilters],
           ['/bar', barController, topNamespace._beforeFilters, topNamespace._afterFilters],
+          ['/foo', fooNamespace],
           ['/foo', fooIndexController, fooNamespace._beforeFilters, fooNamespace._afterFilters],
           ['/foo/create', fooCreateController, fooNamespace._beforeFilters, fooNamespace._afterFilters]
         ]);
