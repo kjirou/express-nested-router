@@ -24,7 +24,8 @@
     "power-assert": "~0.9.0",
     "espower-loader": "~0.9.0",
     "intelli-espower-loader": "~0.4.0",
-    "jshint": "*"
+    "jshint": "*",
+    "supertest": "0.13.0"
   },
   "directories": {
     "test": "test/"

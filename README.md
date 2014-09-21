@@ -58,6 +58,29 @@ namespace.resolve(app);
 //
 ```
 
+```
+var express = require('express');
+var router = require('express-nested-router');
+
+var app = express();
+
+var namespace = router.namespace({
+  index: function(req, res, next){
+    next();
+  }
+});
+
+// Set filters applying before for each controllers and after.
+namespace.addBeforeFilter(function(req, res, next){
+  next();
+});
+namespace.addAfterFilter(function(req, res, next){
+  next();
+});
+
+namespace.resolve(app);
+```
+
 
 ## Development
 
