@@ -276,6 +276,32 @@ describe('express-nested-router', function(){
         });
       });
     });
+
+    describe('reverseLookUp', function(){
+      it('正しく動く', function(){
+        var fooIndexController = function(){},
+          fooCreateController = function(){};
+        var fooNamespace = new router.Namespace({
+          index: fooIndexController,
+          create: fooCreateController
+        });
+
+        var indexController = function(){},
+          barController = function(){};
+        var topNamespace = new router.Namespace({
+          index: indexController,
+          foo: fooNamespace,
+          bar: barController,
+          bar2: barController  // 同じコントローラが登録されている
+        });
+
+        assert.deepEqual(topNamespace.reverseLookUp(indexController), ['/']);
+        assert.deepEqual(topNamespace.reverseLookUp(barController), ['/bar', '/bar2']);
+        assert.deepEqual(topNamespace.reverseLookUp(fooNamespace), ['/foo']);
+        assert.deepEqual(topNamespace.reverseLookUp(fooIndexController), ['/foo']);
+        assert.deepEqual(topNamespace.reverseLookUp(fooCreateController), ['/foo/create']);
+      });
+    });
   });
 
   describe('APIs', function(){
