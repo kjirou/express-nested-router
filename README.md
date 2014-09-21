@@ -6,6 +6,8 @@ Router combines namespace independent for the [express](https://github.com/stron
 
 ## Examples
 
+### Routing
+
 ```
 var express = require('express');
 var router = require('express-nested-router');
@@ -64,17 +66,40 @@ var router = require('express-nested-router');
 
 var app = express();
 
+var fooControllers = {
+  index: function(req, res, next){},
+  show: function(req, res, next){}
+};
+var fooNamespace = router.namespace(fooControllers);
+
+var namespace = router.namespace({
+  index: function(req, res, next){},
+  foo: fooNamespace,
+});
+
+namespace.reverseLookUp(fooControllers.show);  // -> ['/foo/show']
+namespace.reverseLookUp(fooNamespace);  // -> ['/foo']
+```
+
+### Middlewares
+
+```
+var express = require('express');
+var router = require('express-nested-router');
+
+var app = express();
+
 var namespace = router.namespace({
   index: function(req, res, next){
     next();
   }
 });
 
-// Set filters applying before for each controllers and after.
-namespace.addBeforeFilter(function(req, res, next){
+// Set middlewares applying before for each controllers and after.
+namespace.pushBeforeMiddleware(function(req, res, next){
   next();
 });
-namespace.addAfterFilter(function(req, res, next){
+namespace.pushAfterMiddleware(function(req, res, next){
   next();
 });
 
