@@ -1,5 +1,7 @@
 var assert = require('power-assert');
 var express = require('express');
+var request = require('supertest');
+
 var router = require('../index');
 
 
@@ -239,6 +241,38 @@ describe('express-nested-router', function(){
             return v.path;
           });
         assert.deepEqual(['/', '/foo'], getMethodPaths);
+      });
+
+      it('設定したfilter群が正しく実行されている', function(done){
+        var app = express();
+        var namespace = new router.Namespace({
+          index: function(req, res, next){
+            res.__results__.push(3);
+            next();
+          }
+        });
+        namespace.addBeforeFilter(function(req, res, next){
+          res.__results__ = [1];
+          next();
+        });
+        namespace.addBeforeFilter(function(req, res, next){
+          res.__results__.push(2);
+          next();
+        });
+        namespace.addAfterFilter(function(req, res, next){
+          res.__results__.push(4);
+          next();
+        });
+        namespace.addAfterFilter(function(req, res, next){
+          res.__results__.push(5);
+          res.send(res.__results__.join(''));
+        });
+        namespace.resolve(app);
+
+        request(app).get('/').expect(200).expect('12345', function(err){
+          if (err) { throw err; }
+          done();
+        });
       });
     });
   });
