@@ -153,6 +153,16 @@ describe('express-nested-router', function(){
       });
     });
 
+    it('addBeforeFilter/addAfterFilter', function(){
+      var namespace = new router.Namespace();
+      var beforeFilter = function(){};
+      var afterFilter = function(){};
+      namespace.addBeforeFilter(beforeFilter);
+      namespace.addAfterFilter(afterFilter);
+      assert.deepEqual(namespace._beforeFilters, [beforeFilter]);
+      assert.deepEqual(namespace._afterFilters, [afterFilter]);
+    });
+
     it('Should be created by namespace object', function(){
       var namespace = new router.Namespace({
         index: function(){},
@@ -167,10 +177,12 @@ describe('express-nested-router', function(){
         var topController = function(){};
         var namespace = new router.namespace({index:topController});
         var routes = namespace._resolveRoutes();
-        assert.deepEqual(routes, [['', topController]]);
+        assert.deepEqual(routes, [[
+          '', topController, namespace._beforeFilters, namespace._afterFilters
+        ]]);
       });
 
-      it('一名前空間にトップと複数のルートがある', function(){
+      it('ひとつの名前空間にトップと複数のルートがある', function(){
         var controllers = {
           index: function(){},
           foo: function(){},
@@ -178,9 +190,9 @@ describe('express-nested-router', function(){
         };
         var namespace = new router.Namespace(controllers);
         assert.deepEqual(namespace._resolveRoutes(), [
-          ['', controllers.index],
-          ['/bar', controllers.bar],
-          ['/foo', controllers.foo]
+          ['', controllers.index, namespace._beforeFilters, namespace._afterFilters],
+          ['/bar', controllers.bar, namespace._beforeFilters, namespace._afterFilters],
+          ['/foo', controllers.foo, namespace._beforeFilters, namespace._afterFilters]
         ]);
       });
 
@@ -201,10 +213,10 @@ describe('express-nested-router', function(){
         });
 
         assert.deepEqual(topNamespace._resolveRoutes(), [
-          ['', indexController],
-          ['/bar', barController],
-          ['/foo', fooIndexController],
-          ['/foo/create', fooCreateController]
+          ['', indexController, topNamespace._beforeFilters, topNamespace._afterFilters],
+          ['/bar', barController, topNamespace._beforeFilters, topNamespace._afterFilters],
+          ['/foo', fooIndexController, fooNamespace._beforeFilters, fooNamespace._afterFilters],
+          ['/foo/create', fooCreateController, fooNamespace._beforeFilters, fooNamespace._afterFilters]
         ]);
       });
     });
