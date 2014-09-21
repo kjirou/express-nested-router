@@ -263,7 +263,7 @@ describe('express-nested-router', function(){
           res.__results__.push(4);
           next();
         });
-        namespace.addAfterFilter(function(req, res, next){
+        namespace.addAfterFilter(function(req, res){
           res.__results__.push(5);
           res.send(res.__results__.join(''));
         });

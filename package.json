@@ -5,7 +5,7 @@
     "url": "https://github.com/kjirou/express-nested-router"
   },
   "main": "index.js",
-  "description": "Router combines namespace independent for the express",
+  "description": "Router combines namespace independent for the express 3.x",
   "version": "0.0.3",
   "author": "kjirou",
   "keywords": [
@@ -31,8 +31,8 @@
     "test": "test/"
   },
   "scripts": {
-    "test": "mocha --require intelli-espower-loader",
     "ci": "mocha",
-    "jshint": "jshint index.js lib/express-nested-router.js test/tests.js"
+    "jshint": "jshint index.js lib/express-nested-router.js test/tests.js",
+    "test": "mocha --require intelli-espower-loader && npm run jshint"
   }
 }
