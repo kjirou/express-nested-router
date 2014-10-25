@@ -5,22 +5,20 @@ Router combines namespace independent for the [express](https://github.com/stron
 
 
 ## Examples
-
 ### Routing
-
 ```
 var express = require('express');
 var router = require('express-nested-router');
 
 var app = express();
 
-var namespace = router.namespace({
+var routes = router.namespace({
   index: function(req, res, next){},
   foo: function(req, res, next){},
   bar: function(req, res, next){}
 });
 
-namespace.resolve(app);
+routes.resolve(app);
 
 //
 // Routes:
@@ -36,19 +34,19 @@ var router = require('express-nested-router');
 
 var app = express();
 
-var fooNamespace = router.namespace({
+var fooRoutes = router.namespace({
   index: function(req, res, next){},
   create: function(req, res, next){},
   show: function(req, res, next){}
 });
 
-var namespace = router.namespace({
+var routes = router.namespace({
   index: function(req, res, next){},
-  foo: fooNamespace,
+  foo: fooRoutes,
   bar: function(req, res, next){}
 });
 
-namespace.resolve(app);
+routes.resolve(app);
 
 //
 // Routes:
@@ -70,44 +68,63 @@ var fooControllers = {
   index: function(req, res, next){},
   show: function(req, res, next){}
 };
-var fooNamespace = router.namespace(fooControllers);
+var fooRoutes = router.namespace(fooControllers);
 
-var namespace = router.namespace({
+var routes = router.namespace({
   index: function(req, res, next){},
-  foo: fooNamespace,
+  foo: fooRoutes,
 });
 
-namespace.reverseLookUp(fooControllers.show);  // -> ['/foo/show']
-namespace.reverseLookUp(fooNamespace);  // -> ['/foo']
+routes.reverseLookUp(fooControllers.show);  // -> ['/foo/show']
+routes.reverseLookUp(fooRoutes);  // -> ['/foo']
 ```
 
 ### Middlewares
-
 ```
 var express = require('express');
 var router = require('express-nested-router');
 
 var app = express();
 
-var namespace = router.namespace({
+var rountes = router.namespace({
   index: function(req, res, next){
     next();
   }
 });
 
 // Set middlewares applying before for each controllers and after.
-namespace.pushBeforeMiddleware(function(req, res, next){
+rountes.pushBeforeMiddleware(function(req, res, next){
   next();
 });
-namespace.pushAfterMiddleware(function(req, res, next){
+rountes.pushAfterMiddleware(function(req, res, next){
   next();
 });
 
-namespace.resolve(app);
+rountes.resolve(app);
+```
+
+### Chain middlewares to single controller by connect-chain
+```
+var chain = require('connect-chain');
+var express = require('express');
+var router = require('express-nested-router');
+
+var app = express();
+
+var indexController = function(req, res, next){};
+var beforeMiddleware = function(req, res, next){};
+var afterMiddleware = function(req, res, next){};
+
+var chainedController = chain(beforeMiddleware, indexController, afterMiddleware);
+
+var routes = router.namespace({
+  index: chainedController
+});
+
+routes.resolve(app);
 ```
 
 
 ## Development
-
 - `node ~0.10.0`
   - If you use the `0.11`, `power-assert` does not work correctly.
