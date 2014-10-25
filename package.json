@@ -14,7 +14,7 @@
     "routing"
   ],
   "engines": {
-    "node": "<0.12"
+    "node": ">=0.10.0 <0.12"
   },
   "dependencies": {},
   "devDependencies": {
