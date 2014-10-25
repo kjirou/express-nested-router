@@ -1,4 +1,5 @@
 var assert = require('power-assert');
+var chain = require('connect-chain');
 var express = require('express');
 var request = require('supertest');
 
@@ -11,7 +12,9 @@ describe('express-nested-router', function(){
     assert(typeof router === 'object');
   });
 
+
   describe('Static Methods', function(){
+
     it('_extend', function(){
       assert.deepEqual(router._extend({}, {a:1, b:true}), {a:1, b:true});
       // Overwrite props
@@ -38,64 +41,69 @@ describe('express-nested-router', function(){
       assert.strictEqual(router._joinPath('index', 'index'), 'index');
     });
 
-    it('chain', function(done){
-      var steps = [];
-      var beforeMiddleware = function(req, res, next){
-        steps.push(1);
-        next();
-      };
-      var controller = function(req, res, next){
-        steps.push(2);
-        next();
-      };
-      var afterMiddleware = function(req, res, next){
-        steps.push(3);
-        next();
-      };
-      var chained = router.chain(beforeMiddleware, controller, afterMiddleware);
-      chained({}, {}, function(err){
-        assert(!err);
-        assert.deepEqual(steps, [1, 2, 3]);
-        done();
-      });
-    });
 
-    it('chainしたミドルウェアの途中でエラーが発生した場合にnext(err)を返す', function(done){
-      var steps = [];
-      var beforeMiddleware = function(req, res, next){
-        steps.push(1);
-        next();
-      };
-      var controller = function(req, res, next){
-        steps.push(2);
-        next(new Error('hello'));
-      };
-      var afterMiddleware = function(req, res, next){
-        steps.push(3);
-        next();
-      };
-      var chained = router.chain(beforeMiddleware, controller, afterMiddleware);
-      chained({}, {}, function(err){
-        assert(err instanceof Error);
-        assert(err.message === 'hello');
-        assert.deepEqual(steps, [1, 2]);
-        done();
+    // 元々自作の chain 関数がありそのテストを書いていたので
+    // ついでに connect-chain のテストとして残している
+    describe('connect-chain', function(){
+      it('Should be', function(done){
+        var steps = [];
+        var beforeMiddleware = function(req, res, next){
+          steps.push(1);
+          next();
+        };
+        var controller = function(req, res, next){
+          steps.push(2);
+          next();
+        };
+        var afterMiddleware = function(req, res, next){
+          steps.push(3);
+          next();
+        };
+        var chained = chain(beforeMiddleware, controller, afterMiddleware);
+        chained({}, {}, function(err){
+          assert(!err);
+          assert.deepEqual(steps, [1, 2, 3]);
+          done();
+        });
       });
-    });
 
-    it('chainしたミドルウェアの途中でランタイムエラーが発生したら例外を投げる', function(){
-      var chained = router.chain(function(req, res, next){
-        next();
-      }, function(){
-        throw new Error('hello');
+      it('chainしたミドルウェアの途中でエラーが発生した場合にnext(err)を返す', function(done){
+        var steps = [];
+        var beforeMiddleware = function(req, res, next){
+          steps.push(1);
+          next();
+        };
+        var controller = function(req, res, next){
+          steps.push(2);
+          next(new Error('hello'));
+        };
+        var afterMiddleware = function(req, res, next){
+          steps.push(3);
+          next();
+        };
+        var chained = chain(beforeMiddleware, controller, afterMiddleware);
+        chained({}, {}, function(err){
+          assert(err instanceof Error);
+          assert(err.message === 'hello');
+          assert.deepEqual(steps, [1, 2]);
+          done();
+        });
       });
-      assert.throws(function(){
-        chained({}, {}, function(){});
-      }, function(err){
-        return err instanceof Error && /hello/.test(err);
+
+      it('chainしたミドルウェアの途中でランタイムエラーが発生したら例外を渡す', function(done){
+        var chained = chain(function(req, res, next){
+          next();
+        }, function(){
+          throw new Error('hello');
+        });
+        chained({}, {}, function(e){
+          assert(e instanceof Error);
+          done();
+        });
       });
     });
   });
+
 
   describe('Namespace Class', function(){
     it('Should be initialized correctly', function(){

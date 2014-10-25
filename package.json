@@ -16,16 +16,15 @@
   "engines": {
     "node": "<0.12"
   },
-  "dependencies": {
-    "async": "0.9.0"
-  },
+  "dependencies": {},
   "devDependencies": {
-    "express": "~3.16",
-    "mocha": "*",
-    "power-assert": "~0.9.0",
+    "connect-chain": "0.0.1",
     "espower-loader": "~0.9.0",
+    "express": "~3.16",
     "intelli-espower-loader": "~0.4.0",
     "jshint": "*",
+    "mocha": "*",
+    "power-assert": "~0.9.0",
     "supertest": "0.13.0"
   },
   "directories": {
